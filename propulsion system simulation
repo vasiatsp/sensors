@@ -1,0 +1,61 @@
+#include <Keypad.h>
+#include <Servo.h>
+
+// Define the keypad layout and connections
+const byte ROWS = 4; // Four rows
+const byte COLS = 4; // Four columns
+char keys[ROWS][COLS] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+byte rowPins[ROWS] = {2, 3, 4, 5}; // Connect to the row pinouts of the keypad
+byte colPins[COLS] = {6, 7, 8, 9}; // Connect to the column pinouts of the keypad
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+Servo myServo; // Create a servo object
+
+int throttle = 90; // Default servo position (neutral)
+
+void setup() {
+  myServo.attach(9); // Servo control pin
+  myServo.write(throttle); // Set initial throttle
+  Serial.begin(9600); // Start serial communication
+  Serial.println("Propulsion System Ready");
+  Serial.println("Use keys 1-9 to adjust throttle.");
+}
+
+void loop() {
+  char key = keypad.getKey(); // Read the key pressed
+  
+  if (key) { // If a key is pressed
+    Serial.print("Key Pressed: ");
+    Serial.println(key);
+
+    switch (key) {
+      case '1':
+        throttle = 30; // Low throttle
+        break;
+      case '2':
+        throttle = 60; // Medium-low throttle
+        break;
+      case '3':
+        throttle = 90; // Medium throttle
+        break;
+      case '4':
+        throttle = 120; // Medium-high throttle
+        break;
+      case '5':
+        throttle = 150; // High throttle
+        break;
+      default:
+        Serial.println("Invalid Key! Use keys 1-5.");
+        return;
+    }
+    myServo.write(throttle); // Adjust servo position
+    Serial.print("Throttle set to: ");
+    Serial.println(throttle);
+  }
+}
