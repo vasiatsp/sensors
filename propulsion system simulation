@@ -1,26 +1,31 @@
+#include <Key.h>
 #include <Keypad.h>
+
+
+
+
 #include <Servo.h>
 
 // Define the keypad layout and connections
 const byte ROWS = 4; // Four rows
 const byte COLS = 4; // Four columns
 char keys[ROWS][COLS] = {
-  {'1', '2', '3', 'A'},
-  {'4', '5', '6', 'B'},
-  {'7', '8', '9', 'C'},
-  {'*', '0', '#', 'D'}
+  {'D', 'C', 'B', 'A'},
+  {'#', '9', '6', '3'},
+  {'0', '8', '5', '2'},
+  {'*', '7', '4', '1'}
 };
 byte rowPins[ROWS] = {2, 3, 4, 5}; // Connect to the row pinouts of the keypad
 byte colPins[COLS] = {6, 7, 8, 9}; // Connect to the column pinouts of the keypad
 
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 Servo myServo; // Create a servo object
 
 int throttle = 90; // Default servo position (neutral)
 
 void setup() {
-  myServo.attach(9); // Servo control pin
+  myServo.attach(10); // Servo control pin
   myServo.write(throttle); // Set initial throttle
   Serial.begin(9600); // Start serial communication
   Serial.println("Propulsion System Ready");
@@ -55,6 +60,7 @@ void loop() {
         return;
     }
     myServo.write(throttle); // Adjust servo position
+    delay(200); 
     Serial.print("Throttle set to: ");
     Serial.println(throttle);
   }
